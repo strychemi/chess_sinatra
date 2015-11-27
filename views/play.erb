@@ -9,6 +9,16 @@
     <link rel = "stylesheet" type = "text/css" href = "style.css">
   </head>
   <body>
+    <p class="center">
+      Instructions: Type in moves using coordinates.
+    </p>
+    <p class="center">
+      For example: White can type 'b1 c3' to move
+      the knight from its starting location, B1, to
+      its final location, C3.
+    </p>
+    <p class="center">Uppercase and lowercase both work.</p>
+    <br>
     <table id="chess_board" cellpadding="0" cellspacing="0">
       <% (7).downto(0).each do |row| %>
       	<tr>
@@ -25,5 +35,21 @@
       	</tr>
       <% end %>
     </table>
+    <br>
+    <% if !turn_count.nil? %>
+      <% if turn_count % 2 == 1 %>
+        <p class="center"><%= "Turn #{turn_count} [White's move]:" %></p>
+      <% else %>
+        <p><%= "Turn #{turn_count} [Black's move]:" %></p>
+      <% end %>
+      <form class="center">
+        <input type='text' name='user_move' />
+        <input type='submit' value='Move' />
+      </form>
+      <% if move_error[0] %>
+        <p class="center"><%= "#{move_error[1]}" %></p>
+      <% end %>
+    <% end %>
+
   </body>
 </html>

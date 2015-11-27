@@ -2,12 +2,7 @@
   This class controls the user interaction and runs the chess game.
 =end
 
-require 'sinatra'
 require "./board.rb"
-
-get '/' do
-  "Hello, World!"
-end
 
 class Game
   attr_reader :board

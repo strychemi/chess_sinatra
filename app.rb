@@ -3,7 +3,9 @@ require 'sinatra/reloader'
 require './game.rb'
 #initialization
 set :start, false
-#set :game
+set :game, nil
+set :turn, 1
+set :color, "white"
 
 get '/' do
   #Condition to start the game
@@ -11,8 +13,8 @@ get '/' do
     not_bot = params["start_game"]
     if not_bot == "Start"
       if not_bot == "Start"
-        settings.start = true
         settings.game = Game.new
+        settings.start = true
       end
     elsif not_bot.nil? || not_bot == ""
     else
@@ -20,8 +22,12 @@ get '/' do
     end
   end
 
+
   if settings.start
-    erb :play
+    board = settings.game.board
+    erb :play, :locals => {
+      :board => board
+    }
   else
     erb :index, :locals => {
       :not_bot_msg => not_bot_error

@@ -1,21 +1,27 @@
 require 'sinatra'
+require 'sinatra/reloader'
 require './game.rb'
-
 #initialization
-set :prompt, "Welcome to CLI Chess!"\
-"---------------------"\
-"Instructions: Type in moves using coordinates"\
-"For example: White can type 'b1 c3' to move"\
-"the knight from its starting location, B1, to"\
-"its final location, C3. Uppercase and lowercase both"\
-"work. Bullet points indicate black squares."\
-"NOTE: REGARDLESS OF HOW THE PIECE COLORS ARE RENDERED,"\
-"WHITE STARTS ON BOTTOM, BLACK STARTS ON TOP!"
+set :start, false
 
 get '/' do
-  init_prompt = settings.prompt
-  erb :index, :locals => {
-    :init_prompt => init_prompt
-  }
-  throw params.inspect
+  #init_prompt = settings.prompt
+  if !settings.start
+    not_bot = params["start_game"]
+    if not_bot == "Start"
+      settings.start = true if not_bot == "Start"
+    elsif not_bot.nil? || not_bot == ""
+    else
+      not_bot_error = "ERROR: INPUT NOT VALID! TYPE \"Start\" CORRECTLY!"
+    end
+  end
+
+  if settings.start
+    erb :play
+  else
+    erb :index, :locals => {
+      :not_bot_msg => not_bot_error
+    }
+  end
+
 end

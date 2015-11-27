@@ -19,9 +19,13 @@
       its final location, C3.
     </p>
     <p class="center">Uppercase and lowercase both work.</p>
-    <p class="center">Click the button below to start!</p>
+    <p class="center">Type "Start" and click the button to begin!</p>
     <form class="center">
+      <input type='text' name='start_game' />
       <input type='submit' value='Start New Game!' />
     </form>
+    <p class="center">
+      <%= not_bot_msg %>
+    </p>
   </body>
 </html>

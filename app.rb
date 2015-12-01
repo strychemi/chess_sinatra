@@ -13,14 +13,6 @@ get '/' do
   #reset msgs
   settings.move_error = ""
 
-  #check end conditions (checkmate, stalemate, etc.)
-  if settings.start && settings.game.board.end_conditions?(settings.color)
-    settings.start = false
-    erb :checkmate, :locals => {
-      :color => settings.color
-    }
-  end
-
   #check start game conditions
   if !settings.start
     not_bot = params["start_game"]
@@ -69,7 +61,14 @@ get '/' do
     end
   end
 
-  if settings.start
+  #check end conditions (checkmate, stalemate, etc.)
+  if settings.start && settings.game.board.end_conditions?(settings.color)
+    settings.start = false
+    settings.color == "white" ? settings.color = "black" : settings.color = "white"
+    erb :checkmate, :locals => {
+      :color => settings.color
+    }
+  elsif settings.start
     board = settings.game.board
     erb :play, :locals => {
       :board => board,

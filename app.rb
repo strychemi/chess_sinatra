@@ -64,10 +64,12 @@ get '/' do
   #check end conditions (checkmate, stalemate, etc.)
   if settings.start && settings.game.board.end_conditions?(settings.color)
     settings.start = false
+    settings.turn = 1
     settings.color == "white" ? settings.color = "black" : settings.color = "white"
     erb :checkmate, :locals => {
       :color => settings.color
     }
+
   elsif settings.start
     board = settings.game.board
     erb :play, :locals => {

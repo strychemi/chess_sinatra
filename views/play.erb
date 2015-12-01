@@ -22,6 +22,7 @@
     <table id="chess_board" cellpadding="0" cellspacing="0">
       <% (7).downto(0).each do |row| %>
       	<tr>
+          <td id="board-coord"><%= row + 1 %><rd>
           <% (0..7).each do |col| %>
       		  <td>
               <% if !game.board[[row, col]].nil? %>
@@ -34,6 +35,17 @@
           <% end %>
       	</tr>
       <% end %>
+      <tr>
+        <td id="board-coord"> </td>
+        <td id="board-coord">A</td>
+        <td id="board-coord">B</td>
+        <td id="board-coord">C</td>
+        <td id="board-coord">D</td>
+        <td id="board-coord">E</td>
+        <td id="board-coord">F</td>
+        <td id="board-coord">G</td>
+        <td id="board-coord">H</td>
+      </tr>
     </table>
     <br>
     <% if !turn_count.nil? %>

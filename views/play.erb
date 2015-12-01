@@ -24,8 +24,8 @@
       	<tr>
           <% (0..7).each do |col| %>
       		  <td>
-              <% if !board[[row, col]].nil? %>
-                <a href="#"><%= board[[row, col]].unicode %></a>
+              <% if !game.board[[row, col]].nil? %>
+                <a href="#"><%= game.board[[row, col]].unicode %></a>
               <% else %>
                 <a href="#"></a>
               <% end %>
@@ -40,7 +40,7 @@
       <% if turn_count % 2 == 1 %>
         <p class="center"><%= "Turn #{turn_count} [White's move]:" %></p>
       <% else %>
-        <p><%= "Turn #{turn_count} [Black's move]:" %></p>
+        <p class="center"><%= "Turn #{turn_count} [Black's move]:" %></p>
       <% end %>
       <form class="center">
         <input type='text' name='user_move' />

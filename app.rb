@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require './game.rb'
-require './board.rb'
+
 #initialization
 set :start, false
 set :game, nil
@@ -22,6 +22,7 @@ get '/' do
       if not_bot == "Start"
         settings.game = Game.new
         settings.start = true
+        #settings.game.board.print_board
       end
     elsif not_bot.nil? || not_bot == ""
     else
@@ -33,7 +34,7 @@ get '/' do
   #if valid move, save it to "move" variable
   not_empty_move = params["user_move"] && params["user_move"] != ""
   if not_empty_move
-    move = params["user_move"].split(" ").map(&:to_i) if valid_input?(params["user_move"])
+    move = valid_input?(params["user_move"])
   end
 
   if move && !settings.game.nil?
@@ -48,7 +49,7 @@ get '/' do
         settings.color = "black"
       end
     #check black's move
-    elsif turn % 2 == 0 && @board[move[0]].color == "black"
+  elsif settings.turn % 2 == 0 && settings.game.board[move[0]].color == "black"
       if move_piece(move)
         settings.game.board.move_record << move
         #puts @board.move_record.inspect
@@ -67,7 +68,8 @@ get '/' do
     erb :play, :locals => {
       :board => board,
       :turn_count => settings.turn,
-      :move_error => move_error
+      :move_error => move_error,
+      :game => settings.game
     }
   else
     erb :index, :locals => {
@@ -99,8 +101,8 @@ def valid_input?(user_input)
   }
   #regex for valid input
   proper_format = /^[a-zA-Z][1-8] [a-zA-Z][1-8]$/ #Example: A1 B2 or c3 G4
-  puts user_input
-  puts proper_format.match(user_input)
+  #puts user_input
+  puts proper_format.match(user_input).to_s + " hi"
   if proper_format.match(user_input)
     move = user_input.split(" ")
     if move[0] == move[1] #if start and end position are the same

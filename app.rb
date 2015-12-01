@@ -7,13 +7,19 @@ set :start, false
 set :game, nil
 set :turn, 1
 set :color, "white"
+set :move_error, ""
 
 get '/' do
   #reset msgs
-  move_error = ""
+  settings.move_error = ""
 
   #check end conditions (checkmate, stalemate, etc.)
-
+  if settings.start && settings.game.board.end_conditions?(settings.color)
+    settings.start = false
+    erb :checkmate, :locals => {
+      :color => settings.color
+    }
+  end
 
   #check start game conditions
   if !settings.start
@@ -59,7 +65,7 @@ get '/' do
         settings.color = "white"
       end
     else
-      move_error = [true, "Move a correct colored piece!"]
+      settings.move_error = [true, "Move a correct colored piece!"]
     end
   end
 
@@ -68,7 +74,7 @@ get '/' do
     erb :play, :locals => {
       :board => board,
       :turn_count => settings.turn,
-      :move_error => move_error,
+      :move_error => settings.move_error,
       :game => settings.game
     }
   else
@@ -101,22 +107,23 @@ def valid_input?(user_input)
   }
   #regex for valid input
   proper_format = /^[a-zA-Z][1-8] [a-zA-Z][1-8]$/ #Example: A1 B2 or c3 G4
-  #puts user_input
-  puts proper_format.match(user_input).to_s + " hi"
   if proper_format.match(user_input)
     move = user_input.split(" ")
     if move[0] == move[1] #if start and end position are the same
+      settings.move_error = [true, "Not a valid move! The start and end positions are the same!"]
       return false
     else #else check other cases
       start_pos = [move[0][1].to_i - 1, file_num[move[0][0]]]
       end_pos = [move[1][1].to_i - 1, file_num[move[1][0]]]
       if !settings.game.nil? && !settings.game.board[start_pos] #if nothing at start position
+        settings.move_error = [true, "There is no piece at #{move[0]}!"]
         return false
       else #return the move if it passes all other cases
         return [start_pos, end_pos]
       end
     end
   else
+    settings.move_error = [true, "Not a valid input!"]
     return false
   end
 end
@@ -161,8 +168,8 @@ def move_piece(move)
     end
     return true
   else
-    puts "Your king is still in check!" if settings.game.board.in_check?(curr_piece.color)
-    puts "Not a legal move for this #{curr_piece.color} #{curr_piece.class}!"
+    settings.move_error = [true, "Your king is still in check!"] if settings.game.board.in_check?(curr_piece.color)
+    settings.move_error = [true, "Not a legal move for this #{curr_piece.color} #{curr_piece.class}!"]
     puts
     return false
   end

@@ -12,7 +12,9 @@ set :move_error, ""
 get '/' do
   #reset msgs
   settings.move_error = ""
-
+  if params["restart"] == "Restart"
+    restart_game
+  end
   #check start game conditions
   if !settings.start
     not_bot = params["start_game"]
@@ -174,4 +176,12 @@ def move_piece(move)
     puts
     return false
   end
+end
+
+def restart_game
+  settings.start = false
+  settings.game = nil
+  settings.turn = 1
+  settings.color = "white"
+  settings.move_error = ""
 end
